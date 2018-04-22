@@ -1,0 +1,14 @@
+*{
+    margin: 0%;
+    padding: 0%;
+    font-family: sans-serif;
+}
+.margin-0{
+    margin: 0;
+}
+.flex-box{
+    display: flex;
+}
+.margin-center{
+    margin: 0 auto;
+}
