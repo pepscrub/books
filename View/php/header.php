@@ -20,6 +20,13 @@
 
         <!-- Local Files -->
         <script src="control/js/javascriptMain.js"></script>
+        <?php
+            error_reporting(0);
+            session_start();
+            if($_SESSION['perm_type'] == 'admin'){
+                print '<script src="control/js/adminJavscript.js"></script>';
+            }
+        ?>
         <link type="text/css" rel="stylesheet" href="view/css/cssMain.css">
 
         <title>Bookmark</title>
