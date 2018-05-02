@@ -7,11 +7,7 @@
     //REPLACE WITH PROCEDURE
 
 
-    $query_request = 'SELECT * FROM `book` 
-    INNER JOIN `author` ON `author`.`AuthorID` = `book`.`AuthorID`
-    INNER JOIN `bookplot` ON `bookplot`.`BookID` = `book`.`BookID`
-    INNER JOIN `bookranking` ON `bookranking`.`BookID` = `book`.`BookID`
-    ORDER BY `MillionsSold` DESC';
+    $query_request = 'CALL displaybooks_by_million';
     $query_response = sql_select($query_request); //Grabs the information from the db
     get_books($query_response); //For the slider at the top of the page 
     $num = 0;
@@ -23,7 +19,12 @@
     ///////////////////////////
     //PRINTING BOOKS ONTO DOM//
     ///////////////////////////
-    print '<h2 class="center" id="books">Our books!</h2>';
+    if($_SESSION['perm_type'] === 'admin' && $_SESSION['edit_mode'] === 'true'){
+        print '<h2 class="center red-text text-darken-4" id="books"><b>EDITING MODE</b></h2>';
+        print '<p class="center">It\'s dangerous to go alone take this! (there\'s nothing)</p>';
+    }else{
+        print '<h2 class="center" id="books">Our books!</h2>';
+    }
     print '<div class="container">';
         foreach($query_response as $row){
             $book_count++;
@@ -48,7 +49,9 @@
 
             // Millions or Billions
             if($msold >= 1000){
-                $msold = $msold - 999;
+                $msold = round($msold);
+                $msold = $msold - 1000;
+                $msold = $msold + 1;
                 $mill_or_bill = 'Billion';
             }else{
                 $mill_or_bill = 'Million';
@@ -94,7 +97,11 @@
 
             print '<div class="col s4">';
                 if($_SESSION['ping'] != 'high'){
-                    print '<img class="materialboxed margin-center" src="data:image/jpeg;base64,'. base64_encode($row['BookIMG']) .'" />';
+                    if(!empty($row['BookIMG'])){
+                        print '<img class="materialboxed margin-center" src="data:image/jpeg;base64,'. base64_encode($row['BookIMG']) .'" width="203" height="297"/>';
+                    }else{
+                        print '<img class="materialboxed margin-center" src="view/imgs/bookcovers/default.png" width="203" height="297"/>';
+                    }
                 }
                 print '<ul class="collapsible expandable">';
                     print '<li>';
@@ -130,8 +137,8 @@
                         
                                     <!-- Delete book end -->
 
-                                    <input hidden value="' . $row['AuthorID'] . '" name="AuthorID"></input>
-                                    <input hidden value="' . $row['BookID'] . '" name="BookID">
+                                    <input hidden type="number" value="' . $row['AuthorID'] . '" name="AuthorID"></input>
+                                    <input hidden type="number" value="' . $row['BookID'] . '" name="BookID">
                                     <li class="collection">
                                         <div class="row no-padding margin-0">
                                             <div class="col s12">
@@ -182,6 +189,16 @@
                                             </div>
                                             <div class="col s10">
                                                 <input required class="truncate" type="text" value="' . $title . '" name="BookTitle"></input>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item center">
+                                        <div class="row no-padding m-0">
+                                            <div class="col">
+                                                <h5 class="fas fa-book"></h5>
+                                            </div>
+                                            <div class="col s10">
+                                                <input class="truncate" type="text" value="' . $ogtitle . '" name="ogTitle"></input>
                                             </div>
                                         </div>
                                     </li>
@@ -266,7 +283,7 @@
                                                 $msold = $msold + 999;
                                             }
                                             print '
-                                                <input name="rankingScore" type="range" value="' . $msold . '" min="0" max="1000"/>
+                                                <input name="millionSold" type="range" value="' . $msold . '" min="0" max="1000"/>
                                             </div>
                                         </div>
                                     </li>
@@ -283,7 +300,7 @@
                                 <li class="collection-item no-padding">
                                     <div class="row no-padding margin-0">
                                         <button class="col s6 waves-effect waves-light btn red darken-1 modal-trigger" href="#delete_' . $book_count  . '">Delete Book</button>
-                                        <input type="submit" class="col s6 btn green accent-3" name="update" value="Update"></input>
+                                        <input type="submit" class="col s6 btn green accent-3" name="update" value="Update" autofocus></input>
                                     </div>
                                 </li>
                                 </form>

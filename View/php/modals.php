@@ -199,15 +199,63 @@
     
                         <div class="modal-footer">
                             <div class="row">
-                                <div class="col s2 offset-s8"><a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a></div>
-                                <input type="submit" href="#!" class="col s2 btn-flat green accent-3" value="Add book"></input>
+                                <div class="col s2"><a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a></div>
+                                <div class="col s2 offset-s2"><input type="submit" href="#!" class="btn-flat green accent-3" value="Add book"></input></div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
+                <!-- Registration form -->
 
+            <div id="add_user" class="modal">
+                <div class="modal-content">
+                    <form id="add_new_user" method="post" action="control/php/registration_process.php" autocomplete="off">
+                        <div class="row center">
+                            <h4>Register a new account</h4>
+                        </div>
+                        <div class="modal-content">
+                            <div class="row no-padding m-0">
+                                <div class="col s6">
+                                    <input class="truncate" id="reg_username" placeholder="New username" type="text" name="reg_username"></input>
+                                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                                </div>
+                                <div class="col s6">
+                                    <input class="truncate" id="reg_password" type="password" name="reg_password"></input>
+                                    <label for="reg_password"><i class="fas fa-key"></i> Password</label>
+                                </div>
+                            </div>
+                            <div class="row no-padding m-0">
+                                <div class="col s6">
+                                    <input class="truncate" id="reg_fname" placeholder="New username" type="text" name="reg_fname"></input>
+                                    <label for="reg_fname">First Name</label>
+                                </div>
+                                <div class="col s6">
+                                    <input class="truncate" id="reg_lname" type="text" name="reg_lname"></input>
+                                    <label for="reg_lname">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="row no-padding m-0">
+                                <div class="col s12">
+                                    <select name="reg_perm_type" form="add_new_user">
+                                        <option value="" disabled selected>Permission Type</option>
+                                        <option value="Default">Default</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                    <label>Permission Type</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col s2"><a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a></div>
+                                <div class="col s2 offset-s2"><input type="submit" href="#!" class="btn-flat green accent-3" value="Add new user"></input></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
         <?php

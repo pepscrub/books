@@ -87,18 +87,27 @@
 
     function sql_insert_author($name, $surname, $nationality, $birthyear, $deathyear){
         try{
-            $query = 'INSERT INTO `author` (`AuthorID`, `Name`, `Surname`, `Nationality`, `BirthYear`, `DeathYear`) 
-                        VALUES (NULL, :name , :surname , :nationality , :birthyear , :deathyear);';
-            $conn = db_connect();
-            $stmta = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-            $stmta->bindParam(':name', $name);
-            $stmta->bindParam(':surname', $surname);
-            $stmta->bindParam(':nationality', $nationality);
-            $stmta->bindParam(':birthyear', $birthyear);
-            $stmta->bindParam(':deathyear', $deathyear);  
-            $stmta->execute();
-            $last_id = $conn->lastInsertId();
-            return $last_id;
+            if(count(sql_select('SELECT * FROM `author` WHERE `Name` = "' . $name . '" && `Surname` = "' . $surname . '";')) >= 1 ){
+                $sql_statement = 'SELECT `AuthorID` FROM `author` WHERE `Name` = "' . $name . '" && `Surname` = "' . $surname . '";';
+                $conn = db_connect();
+                $stmta = $conn->prepare($sql_statement, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                $stmta->execute(); 
+                $results = $stmta->fetch(PDO::FETCH_ASSOC);
+                $results = $results['AuthorID'];
+            }else{
+                $query = 'INSERT INTO `author` (`AuthorID`, `Name`, `Surname`, `Nationality`, `BirthYear`, `DeathYear`) 
+                            VALUES (NULL, :name , :surname , :nationality , :birthyear , :deathyear);';
+                $conn = db_connect();
+                $stmta = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                $stmta->bindParam(':name', $name);
+                $stmta->bindParam(':surname', $surname);
+                $stmta->bindParam(':nationality', $nationality);
+                $stmta->bindParam(':birthyear', $birthyear);
+                $stmta->bindParam(':deathyear', $deathyear);  
+                $stmta->execute();
+                $results = $conn->lastInsertId();
+            }
+            return $results;
         }catch (PDOException $e){
             return 'An error occured: ' . $e->getMessage();
         }
@@ -110,20 +119,29 @@
 
     function sql_insert_books($booktitle, $originalTitle, $yearofpublication, $genre, $msold, $book_language, $authorId, $book_img){
         try{
-            $query =    'INSERT INTO `book` (`BookID`, `BookTitle`, `OriginalTitle`, `YearofPublication`, `Genre`, `MillionsSold`, `LanguageWritten`, `AuthorID`, `BookIMG`) 
-                        VALUES (NULL, ?,?,?,?,?,?,?,?);';
-            $conn = db_connect();
-            $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-            $stmt->bindParam(1, $booktitle); 
-            $stmt->bindParam(2, $originalTitle); 
-            $stmt->bindParam(3, $yearofpublication); 
-            $stmt->bindParam(4, $genre); 
-            $stmt->bindParam(5, $msold); 
-            $stmt->bindParam(6, $book_language); 
-            $stmt->bindParam(7, $authorId); 
-            $stmt->bindParam(8, $book_img);  
-            $stmt->execute(); 
-            $last_id = $conn->lastInsertId();
+            if(count(sql_select('SELECT `BookID` FROM `book` WHERE `BookTitle` = "' . $booktitle . '" && `LanguageWritten` = "' . $book_language . '";')) >= 1){
+                $sql_statement = 'SELECT `BookID` FROM `book` WHERE `BookTitle` = "' . $booktitle . '" && `LanguageWritten` = "' . $book_language . '";';
+                $conn = db_connect();
+                $stmta = $conn->prepare($sql_statement, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                $stmta->execute(); 
+                $results = $stmta->fetch(PDO::FETCH_ASSOC);
+                $results = $results['BookID'];
+            }else{
+                $query =    'INSERT INTO `book` (`BookID`, `BookTitle`, `OriginalTitle`, `YearofPublication`, `Genre`, `MillionsSold`, `LanguageWritten`, `AuthorID`, `BookIMG`) 
+                            VALUES (NULL, ?,?,?,?,?,?,?,?);';
+                $conn = db_connect();
+                $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                $stmt->bindParam(1, $booktitle); 
+                $stmt->bindParam(2, $originalTitle); 
+                $stmt->bindParam(3, $yearofpublication); 
+                $stmt->bindParam(4, $genre); 
+                $stmt->bindParam(5, $msold); 
+                $stmt->bindParam(6, $book_language); 
+                $stmt->bindParam(7, $authorId); 
+                $stmt->bindParam(8, $book_img);  
+                $stmt->execute(); 
+                $last_id = $conn->lastInsertId();
+            }
             return $last_id;
         }catch (PDOException $e){
             return 'An error occured: ' . $e->getMessage();
@@ -159,9 +177,108 @@
         }
     }
 
+    //---------------------------------
+    //SQL UPDATE FUNCTIONS FOR BOOKS
+    //---------------------------------
 
-    //Plot insert
+    //Author update
+    //-------------
+
+    function sql_update_author($authorid, $name, $surname, $nationality, $birthyear, $deathyear){
+        try{
+            $query = '
+            UPDATE `author` SET 
+            `Name`=?,
+            `Surname`=?,
+            `Nationality`=?,
+            `BirthYear`=?,
+            `DeathYear`=? 
+            WHERE `AuthorID` = ?';
+            $conn = db_connect();
+            $stmta = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+            $stmta->bindParam(1, $name);
+            $stmta->bindParam(2, $surname);
+            $stmta->bindParam(3, $nationality);
+            $stmta->bindParam(4, $birthyear);
+            $stmta->bindParam(5, $deathyear);
+            $stmta->bindParam(6, $authorid);  
+            $stmta->execute();
+        }catch (PDOException $e){
+            return 'An error occured: ' . $e->getMessage();
+        }
+    }
+    
+    //Books update
+    //------------
+
+    function sql_update_books($bookid, $booktitle, $originalTitle, $yearofpublication, $genre, $msold, $book_language, $authorId, $book_img){
+        try{
+            $query =    '
+            UPDATE `book` SET 
+            `BookTitle`= ?,
+            `OriginalTitle`= ?,
+            `YearofPublication`= ?,
+            `Genre`= ?,
+            `MillionsSold`= ?,
+            `LanguageWritten`= ?,
+            `AuthorID`= ?,
+            `BookIMG`= ? 
+            WHERE `BookID` = ?';
+            $conn = db_connect();
+            $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+            $stmt->bindParam(1, $booktitle); 
+            $stmt->bindParam(2, $originalTitle); 
+            $stmt->bindParam(3, $yearofpublication); 
+            $stmt->bindParam(4, $genre); 
+            $stmt->bindParam(5, $msold); 
+            $stmt->bindParam(6, $book_language); 
+            $stmt->bindParam(7, $authorId); 
+            $stmt->bindParam(8, $book_img);  
+            $stmt->bindParam(9, $bookid);  
+            $stmt->execute(); 
+            return 'successful';
+        }catch (PDOException $e){
+            return 'An error occured: ' . $e->getMessage();
+        }
+    }
+
+    //Plot update
     //-----------
+
+    function sql_update_plot($plot, $plotsource, $bookid){
+        try{
+            $query =    'UPDATE `bookplot` SET 
+            `Plot`= "' . $plot . '",
+            `PlotSource`= "' . $plotsource . '"
+            WHERE `bookID` = ' . $bookid . ';';
+            $conn = db_connect();
+            $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+            $stmt->execute();
+            return $query;
+        }catch (PDOException $e){
+            return 'An error occured: ' . $e->getMessage();
+        }
+    }
+
+    //Score update
+
+    function sql_update_score($rank, $bookid){
+        try{
+            $query =    'UPDATE `bookranking` SET 
+            `RankingScore`= "' . $rank . '"
+            WHERE `BookID` = ' . $bookid .  ';';
+            $conn = db_connect();
+            $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+            $stmt->execute(); 
+        }catch (PDOException $e){
+            return 'An error occured: ' . $e->getMessage();
+        }
+    }
+    
+
+
+    //Sql Delete
+    //----------
 
 
     //Delete function
@@ -201,5 +318,40 @@
         return 'Item was deleted!'; 
     }
 
+    //Create a new account
+
+    function create_user($postdata){
+        //Field Sanitisation  
+        $usr_name = !empty($postdata['reg_username'])? test_user_input(($postdata['reg_username'])) : null;
+        $fname = !empty($postdata['reg_fname'])? test_user_input(($postdata['reg_fname'])) : null;
+        $lname = !empty($postdata['reg_lname'])? test_user_input(($postdata['reg_lname'])) : null;
+        $perm_type = !empty($postdata['reg_perm_type'])? test_user_input(($postdata['reg_perm_type'])) : null;
+
+        //Password santisation and hashing
+        $pass = !empty($postdata['reg_password'])? test_user_input(($postdata['reg_password'])) : null;
+        $pass_hash = password_hash($pass, PASSWORD_DEFAULT); //password hashing
+
+        $insert_reg_sql = 'INSERT INTO `user_table` (username, password, perm_type, fname, lname) VALUES (?, ?, ?, ?, ?);';
+        $conn = db_connect();
+        $stmt = $conn->prepare($insert_reg_sql);
+        $stmt->bindParam(1, $usr_name);
+        $stmt->bindParam(2, $pass_hash);
+        $stmt->bindParam(3, $perm_type);
+        $stmt->bindParam(4, $fname);
+        $stmt->bindParam(5, $lname);
+        $result = $stmt->execute();
+    }
+
+    function username_exists($postdata){
+
+        $username = !empty($postdata['reg_username'])? test_user_input(($postdata['reg_username'])) : null;
+
+        $select_reg_sql = "SELECT username FROM user_table WHERE username = :username ;";
+        $conn = db_connect();
+        $stmt = $conn->prepare($select_reg_sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
 ?>

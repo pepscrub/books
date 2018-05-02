@@ -7,6 +7,8 @@
             error_reporting(0);
             session_start();
             function get_books($bookquery){
+                // Array based counting system for at max 20 items
+                // Method is used due to slider items needing ids alike the ones found in the array 
                 $count_string = array("#one!","#two!","#three!","#four!","#five!","#six!","#seven!","#eight!","#nine!","#ten!","#eleven!","#twelve!","#thirteen!","#fourteen!","#fifthteen!","#sixteen!","#seventeen!","#eightteen!","#nineteen!","#twenty!");
                 $count = 0;
                 foreach($bookquery as $row){
@@ -20,8 +22,10 @@
 
 
                     if(count($bookquery) == $count+1){ //Closing tags for the carousel
-                        print '</div>
+                        //Forced to used this to close the div tags of the carousel. No idea why but it bugs out and throws errors if I dont
+                        print '</div> 
                         </div>';
+                        // Changes the icon based on the edit 
                         if($_SESSION['perm_type'] == 'admin' && $_SESSION['edit_mode'] == 'true'){
                             print '<div><i class="far fa-bookmark bookmarkMain"></i></div>';
                         }else{

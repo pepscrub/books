@@ -34,7 +34,7 @@ window.addEventListener('load', function(){
     });
     page_ajax(' '); // Default landing page
     scroll_window();
-    optimzation()
+    optimzation();
 });
 
 $(window).scroll(function () { 
@@ -51,23 +51,29 @@ function optimzation(){
     }
 }
 
-function scroll_window(){
-    if($(window).scrollTop() < 450){
-        document.getElementById('nav-colors').style = 'background-color: #ff000000; transition: background-color .5s linear;';
+function scroll_window(){//If the users got less than 3 logical processors dont render out the gradient nav
+    if(window.navigator.hardwareConcurrency > 4){
+        if($(window).scrollTop() < 300){
+            document.getElementById('nav-colors').style = 'background: linear-gradient(42deg, #1627ae00, #a016ae00, #16aea900); animation: AnimationName 60s ease infinite; transition: background .5s linear; background-size: 600% 600%;';
+        }else{
+            document.getElementById('nav-colors').style = 'background: linear-gradient(42deg, #1627ae, #a016ae, #16aea9); animation: AnimationName 60s ease infinite; background-size: 600% 600%; transition: background .25s linear; ';
+        }
     }else{
-        document.getElementById('nav-colors').style = 'background-color: #ee6e73; transition: background-color .25s linear;';
+        if($(window).scrollTop() < 450){
+            document.getElementById('nav-colors').style = 'background-color: #26a69a00; transition: background-color .5s linear;';
+        }else{
+            document.getElementById('nav-colors').style = 'background-color: #26a69a; transition: background-color .25s linear;';
+        }
     }
 }
 
+// Just moves the slider every 15 seconds
 
 setInterval(function(){
     var instance = M.Carousel.getInstance(header_slider);
     instance.next();
 }, 15000)
 
-setInterval(function(){
-    console.log(window.navigator.connection.rtt);
-}, 1000)
 
 
 function page_ajax(page_req){
@@ -96,9 +102,32 @@ function page_ajax(page_req){
                 'opacity': '1',
                 'filter': 'blur(0px)'
             });
+
+            battery();
+
         },
         error: function (err) {
             ajax_err(err, checkurl);
         }
     });
 }
+
+// Progress bar for battery if the person is on a laptop or phone 
+// Kind of unnecassary but it was a fun side project
+
+function battery(){
+    var promise = window.navigator.getBattery(); //Getting promise from navigator object
+    promise.then(function(value){ //Opening promise
+        //If the charging value is true and chargingtime is not 0 or if the dischargingin time is not inifity
+        if(value.charging === true && value.chargingTime != 0 || value.dischargingTime != 'Infinity'){
+            value.onlevelchange = function(){
+                var charge = this.level * 100;
+                console.log(charge);
+                $('#ajax_loader').html('<div class="determinate" style="width: '+charge+'%"></div>')
+                battery();
+            }
+        }
+    });
+}
+
+

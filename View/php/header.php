@@ -8,10 +8,12 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <!-- Materialize framework -->
-        <link type="text/css" rel="stylesheet" href="view/materialize/css/materialize.min.css">
-        <link type="text/scss" rel="stylesheet" href="view/materialize/css/materialize.sass">
+        <link type="text/css" rel="stylesheet" href="view/materialize/css/materialize.css">
+        <link type="text/scss" rel="stylesheet" href="view/materialize/css/materialize.scss">
         <script src="view/materialize/js/materialize.min.js" defer></script>
 
+        <!-- Clipboard.js -->
+        <script src="control/js/clipboard.min.js"></script>
 
         <!-- Jquery and AJAX -->
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -20,6 +22,8 @@
 
         <!-- Local Files -->
         <script src="control/js/javascriptMain.js"></script>
+        <link type="text/scss" rel="stylesheet" href="view/css/color_modifications.scss">
+        <link type="text/css" rel="stylesheet" href="view/css/cssMain.css">
         <?php
             error_reporting(0);
             session_start();
@@ -27,7 +31,6 @@
                 print '<script src="control/js/adminJavscript.js"></script>';
             }
         ?>
-        <link type="text/css" rel="stylesheet" href="view/css/cssMain.css">
 
         <title>Bookmark</title>
             

@@ -1,6 +1,5 @@
 <?php
     require '../../model/php/db_and_sensitive.php';
-    session_start();
 
     //Sanitization of all fields in the form 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){ //Checks if the method requested was post
@@ -32,7 +31,12 @@
         if(isset($_POST['PlotSource'])){
             if($_FILES['plot']['type'] === 'text/plain' && preg_match('/txt/', $_FILES['plot']['name']) === 1){
                 $plot = file_get_contents($_FILES['plot']['tmp_name']);
-                $plot = preg_replace('/"/', '', $plot); //Replace any quotes
+                $plot = preg_replace('/"/', '', $plot); //Replace any double quotes
+                $plot = preg_replace('/\'/', '', $plot); //Replace any single quotes
+                $plot = preg_replace('/\//', '', $plot); //Replace backslashes
+                $plot = preg_replace('/{\/*}/', '', $plot); //Replace any multiline comments
+                $plot = preg_replace('/;/', '', $plot); //Replace semi columns
+                $plot = !empty($plot)? test_user_input($plot) : null;
             }
         }
 
@@ -56,18 +60,14 @@
 
         if($uploadOk === 1){//If the upload proccess has been successfull 
             $book_img = file_get_contents($_FILES['book_img']['tmp_name']);
-            print 'Successs!';
         }else{
-            $_SESSION['book_error'] = ". Sorry, an error occured";
+            $book_img = file_get_contents('../../view/imgs/BookCovers/default.png');
         }
 
 
 
         $authorid = sql_insert_author($name, $surname, $nationality, $birthyear, $deathyear); //This function returns the last inserted id into the db (used this so if multiple books were added for multiple authors)
         $bookid = sql_insert_books($booktitle, $ogTitle, $yearofpublication, $genre, $msold, $book_language, $authorid, $book_img);
-
-        print_r($bookid);
-
 
         sql_insert_plot($plot, $plotsource, $bookid);
         sql_insert_score($score, $bookid);
