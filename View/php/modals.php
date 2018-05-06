@@ -43,7 +43,7 @@
             </div>
         <?php
     }
-    if($_SESSION['perm_type'] == 'admin'){
+    if($_SESSION['perm_type'] === 'admin'){ // If the user is an admin allow this modal to render (item is a string)
         ?>
             <div id="add_book" class="modal">
                 <div class="row center">
@@ -53,17 +53,17 @@
                     <form id="add_book_form" action="control/php/addbooks.php" method="post" enctype="multipart/form-data" >
                         <div class="row no-padding m-0">
                             <div class="col s6">
-                                <input placeholder="First Name" id="first_name" class="truncate" type="text" name="name"></input>
+                                <input required placeholder="First Name" id="first_name" class="truncate" type="text" name="name"></input>
                                 <label for="first_name">First Name</label>
                             </div>
                             <div class="col s6">
-                                <input placeholder="Last Name"id="last_name"class="truncate" type="text" name="surname"></input>
+                                <input required placeholder="Last Name"id="last_name"class="truncate" type="text" name="surname"></input>
                                 <label for="last_name">Last Name</label>
                             </div>
                         </div>
                         <div class="row no-padding m-0">
                             <div class="col s6">
-                                <input id="book_title" placeholder="Book Name" class="truncate" type="text" name="BookTitle"></input>
+                                <input required id="book_title" placeholder="Book Name" class="truncate" type="text" name="BookTitle"></input>
                                 <label for="book_title">Book Name</label>
                             </div>
                             <div class="col s6">
@@ -74,7 +74,7 @@
 
                         <div class="row no-padding m-0">
                             <div class="col s12">
-                                <input class="truncate" id="plot_source" placeholder="https://plotsourcelink.example" type="text" name="PlotSource"></input>
+                                <input required class="truncate" id="plot_source" placeholder="https://plotsourcelink.example" type="text" name="PlotSource"></input>
                                 <label for="plot_source">Plot Source</label>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                                 <div class="file-field input-field">
                                     <div class="btn grey darken-4 waves-effect waves-light">
                                         <span>Upload Image</span>
-                                        <input type="file" name="book_img" id="book_img">
+                                        <input required type="file" name="book_img" id="book_img">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text" placeholder="Book cover">
@@ -96,7 +96,7 @@
                                 <div class="file-field input-field">
                                     <div class="btn grey darken-4 waves-effect waves-light">
                                         <span>Upload Text</span>
-                                        <input type="file" name="plot" id="plot">
+                                        <input required type="file" name="plot" id="plot">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text" placeholder="Plot file">
@@ -108,7 +108,7 @@
                                     
                         <div class="row no-padding m-0">
                             <div class="col s12">
-                                <input type="text" id="nationality" placeholder="Nationality" name="Nationality"></input>
+                                <input required type="text" id="nationality" placeholder="Nationality" name="Nationality"></input>
                                 <label for="nationality">Nationality of the author</label>
                             </div>
                         </div>
@@ -116,11 +116,11 @@
                                     
                         <div class="row no-padding m-0">
                             <div class="col s4">
-                                <input type="text" id="publication_date" palceholder="1985" name="YearofPublication" class="datepicker"></input>
+                                <input required type="text" id="publication_date" palceholder="1985" name="YearofPublication" class="datepicker"></input>
                                 <label for="publication_date">Year the book was published</label>
                             </div>
                             <div class="col s4">
-                                <input type="text" id="BirthYear" name="BirthYear" class="datepicker"></input>
+                                <input required type="text" id="BirthYear" name="BirthYear" class="datepicker"></input>
                                 <label for="BirthYear">Year of birth</label>
                             </div>
                             <div class="col s4">

@@ -9,7 +9,6 @@
             <a href="#" data-target="menu_others" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down valign-wrapper">
                 <li><a class="waves-effect waves-light scrollspy" href="#books">Our Books</a></li>
-                <li><a class="waves-effect waves-light">Contact</a></li>
                 <li><div class="waves-effect waves-light sidenav-trigger center" data-target="menu_others"><i class="material-icons center-align">more_vert</i></div></li>
             </ul>
         </div>
@@ -32,7 +31,6 @@
     ?>
     <li><div class="divider"></div></li>
     <li><a class="waves-effect section scrollspy" href="#books">Our Books</a></li>
-    <li><a class="waves-effect">Contact</a></li>
     <li><div class="divider"></div></li>
     <li><a class="subheader">More options</a></li>
     <li><div class="divider"></div></li>

@@ -19,6 +19,7 @@
             sql_delete($delete_items);
 
             header("location: ../../");
+            exit();
         }
 
         // Code relating to if the form was updated
@@ -81,5 +82,6 @@
             sql_update_score($score, $bookid);
         }
         header("location: ../../");
+        exit();
     }
 ?>

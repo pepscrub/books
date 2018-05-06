@@ -116,6 +116,9 @@
     //Books insert
     //------------
     //Used bind params for the image blob
+    // If the book exists in the database select that and use that bookID instead of attempting to insert a new one
+    // exit() command does not work as this has a location redirect after the function is executed
+
 
     function sql_insert_books($booktitle, $originalTitle, $yearofpublication, $genre, $msold, $book_language, $authorId, $book_img){
         try{
@@ -284,20 +287,20 @@
     //Delete function
     //Requires a 3D array
     //Requires table name to be defined
-    //Requires first item of third array to be the ID for row to be deleted
+    //Requires first item (key) of third array to be the ID for row to be deleted
     //Requires the second item in the 3D array to be called tableName
 
     function sql_delete($item){
         if(is_array($item) == 1){
             $count = 1; //Used count for debugging purposes for the foreach loop
-            foreach($item as $del_id){
+            foreach($item as $del_id){ //Grabs the items within the array
                 if(is_array($del_id) == 1){ //Checks if the 3D array exists
-                    if(preg_match('/Id/', key($del_id)) === 1 || preg_match('/id/', key($del_id)) === 1 || preg_match('/ID/', key($del_id)) === 1){ //Checks if any of the keys contain ID
+                    if(preg_match('/Id/', key($del_id)) === 1 || preg_match('/id/', key($del_id)) === 1 || preg_match('/ID/', key($del_id)) === 1){ //Checks if any of the keys contain ID (not keysensitive)
                         try{
                             $del_id_sanitized = !empty($del_id['tableName'])? test_user_input(($del_id['tableName'])) : null;
                             $del_key = key($del_id);
 
-                            $query = 'DELETE FROM ' . $del_id_sanitized . ' WHERE ' . key($del_id) . ' = ' . $del_id[$del_key] . ';';
+                            $query = 'DELETE FROM ' . $del_id_sanitized . ' WHERE ' . $del_key . ' = ' . $del_id[$del_key] . ';';
                             $conn = db_connect();
                             $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                             $stmt->execute(); 
@@ -305,10 +308,10 @@
                             exit('An error occured: ' . $e->getMessage());
                         }
                     }else{
+                        //Using exit method since it'll run one line and close the function instead of iterrating through the loop until its completed/ last loop
                         exit('No ids found! You <u>must</u> start the 3D array with the keys as the book id <br> Count in the array:  ' . $count . ' item.');
                     }
                 }else{
-                    //Using exit method since it'll run one line and close the function instead of iterrating through the loop until its completed/ last loop
                     exit('Error inside array, the second part of the array is not an array <br> Entered Item: ' . $del_id);
                 }
             }
@@ -331,6 +334,9 @@
         $pass = !empty($postdata['reg_password'])? test_user_input(($postdata['reg_password'])) : null;
         $pass_hash = password_hash($pass, PASSWORD_DEFAULT); //password hashing
 
+
+
+        //Insert statement and bin param
         $insert_reg_sql = 'INSERT INTO `user_table` (username, password, perm_type, fname, lname) VALUES (?, ?, ?, ?, ?);';
         $conn = db_connect();
         $stmt = $conn->prepare($insert_reg_sql);

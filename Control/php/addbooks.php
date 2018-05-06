@@ -31,6 +31,10 @@
         if(isset($_POST['PlotSource'])){
             if($_FILES['plot']['type'] === 'text/plain' && preg_match('/txt/', $_FILES['plot']['name']) === 1){
                 $plot = file_get_contents($_FILES['plot']['tmp_name']);
+                // Some sanitization
+                $plot = stripcslashes($plot);
+                $plot = stripslashes($plot);
+                $plot = strip_tags($plot);
                 $plot = preg_replace('/"/', '', $plot); //Replace any double quotes
                 $plot = preg_replace('/\'/', '', $plot); //Replace any single quotes
                 $plot = preg_replace('/\//', '', $plot); //Replace backslashes

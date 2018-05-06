@@ -19,6 +19,7 @@ xampp or wamp
 
 ```
 Admin: Username = admin and password = asd
+Default User: Username = Default and password = password
 no other users added as of yet
 
 ```

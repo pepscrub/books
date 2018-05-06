@@ -25,6 +25,15 @@
     }else{
         print '<h2 class="center" id="books">Our books!</h2>';
     }
+
+    //Errror div
+    if(isset($_SESSION['Error']) && is_string($_SESSION['Error'])){ // If the error has been set and is a string
+        if($_SESSION['Error'] != 'False' || $_SESSION['Error'] != 'false'){ // If its not valued to false
+            print '<h2 class="center red-text text-darken-4"><b>' . $_SESSION['Error'] . '</b></h2>';
+            unset($_SESSION['Error']);
+        }
+    }
+
     print '<div class="container">';
         foreach($query_response as $row){
             $book_count++;

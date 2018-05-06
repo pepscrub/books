@@ -24,10 +24,6 @@
             <div class="footer-copyright">
                 <div class="container">
                 © 2018 Brendan Freeman
-                <?php
-                    session_start();
-                    var_dump($_SESSION);
-                ?>
                 </div>
             </div>
             <script>

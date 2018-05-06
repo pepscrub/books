@@ -44,19 +44,12 @@ function admin_page_ajax(page_req){
 }
 
 
-
-function add_book_ajax(){
-    var url=""
-    $.ajax({
-        url: url + '' + page_req,
-        type: 'get',
-        dataType: "text",
-        success: function (res) {
-
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-}
-
+// Disabling the enter key as a quickfix
+// Hitting enter before would automatically detect the delete form
+// first before anything else so it'd delete the object
+$(document).keypress(
+    function(event){
+     if (event.which == '13') {
+        event.preventDefault();
+      }
+});
